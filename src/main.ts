@@ -56,29 +56,52 @@ import './style.css';
 // inputToView();
 
 let post = '';
-let jsInput: HTMLInputElement;
-let jsDiv: HTMLDivElement | '';
 
 function inputHandler(e: InputEvent) {
   if (!e.target) return;
 
   post = (e.target as HTMLInputElement).value;
 }
+function createVDOM() {
+  const inputInfo = ['input', post, inputHandler];
+  const divInfo = ['div', `Post displayed: ${post}`];
 
-function dataToView() {
-  jsInput = document.createElement('input');
-
-  jsDiv = post == 'Will' ? '' : document.createElement('div');
-
-  jsInput.value = post;
-
-  if (jsDiv) jsDiv.textContent = post;
-
-  document.body.replaceChildren(jsInput, jsDiv as HTMLDivElement);
-
-  jsInput.addEventListener('input', inputHandler as EventListener);
-
-  jsInput.focus();
+  return [inputInfo, divInfo];
 }
 
-setInterval(dataToView, 15);
+function updateDOM() {
+  const vDOM = createVDOM();
+  const actualDOM = vDOM.map(convert);
+  document.body.replaceChildren(...actualDOM);
+
+  const jsInputDOM = actualDOM.find(
+    (element) => element instanceof HTMLInputElement
+  ) as HTMLInputElement;
+  if (jsInputDOM) {
+    jsInputDOM.focus();
+  }
+}
+
+function convert(vDOM: any[]) {
+  if (vDOM[0] === 'input') {
+    const elem = document.createElement(vDOM[0]);
+    elem.value = vDOM[1];
+    elem.addEventListener('input', inputHandler as EventListener);
+    return elem;
+  }
+  if (vDOM[0] === 'div') {
+    const elem = document.createElement(vDOM[0]);
+    elem.textContent = vDOM[1];
+    return elem;
+  } else return;
+}
+
+// setInterval(updateDOM, 15);
+
+// jsInput = document.createElement('input');
+// jsDiv = post == 'Will' ? '' : document.createElement('div');
+// jsInput.value = post;
+// if (jsDiv) jsDiv.textContent = post;
+// document.body.replaceChildren(jsInput, jsDiv as HTMLDivElement);
+// jsInput.addEventListener('input', inputHandler as EventListener);
+// jsInput.focus();
