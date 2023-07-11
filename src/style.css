@@ -17,3 +17,21 @@ html {
 body {
   color: #333;
 }
+
+.input {
+  padding: 0.6rem 1.2rem;
+  margin-bottom: 1rem;
+}
+
+div {
+  padding: 1rem 2rem;
+  border: 1px solid red;
+}
+
+.s-button {
+  padding: 0.7rem 1.4rem;
+  display: inline-block;
+  border: none;
+  background-color: greenyellow;
+  border-radius: 2px;
+}
