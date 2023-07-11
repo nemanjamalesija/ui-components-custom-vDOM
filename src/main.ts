@@ -54,25 +54,40 @@ import './style.css';
 // }
 
 // inputToView();
+let vDOM;
+let elems;
 
-let post = '';
+const data: {
+  [key: string]: string;
+} = {
+  post: '',
+  post2: '',
+};
+
+function updateData(label: string, value: string) {
+  data[label] = value;
+  updateDOM();
+}
 
 function inputHandler(e: InputEvent) {
   if (!e.target) return;
 
-  post = (e.target as HTMLInputElement).value;
+  const inputElement = e.target as HTMLInputElement;
+  updateData('post', inputElement.value);
 }
 
 function createVDOM() {
-  const inputInfo = ['input', post, inputHandler];
-  const divInfo = ['div', `First post: ${post}`];
-  const divInfo2 = ['h3', 'Great job!'];
-  const paragraph = [
-    'p',
-    'This is a composed paragraph made for exercise purpose in VIRTUAL DOM and user interface components.',
+  const vDOMElems = [
+    ['input', data.post, inputHandler],
+    ['div', `First post: ${data.post}`],
+    ['h3', 'Great job!'],
+    [
+      'p',
+      'This is a composed paragraph made for exercise purpose in VIRTUAL DOM and user interface components.',
+    ],
   ];
 
-  return [inputInfo, divInfo, divInfo2, paragraph];
+  return vDOMElems;
 }
 
 function updateDOM() {
@@ -97,7 +112,6 @@ function convert(vDOM: any[]) {
     convertedInput = document.createElement(vDOM[0]);
     convertedInput.value = vDOM[1];
     convertedInput.addEventListener('input', vDOM[2] as EventListener);
-    convertedInput.focus();
     return convertedInput;
   }
 
@@ -108,4 +122,6 @@ function convert(vDOM: any[]) {
   } else return new Error('Item not convertible or incorrectly passed item');
 }
 
-setInterval(updateDOM, 150);
+// setInterval(updateDOM, 150);
+
+updateDOM();
