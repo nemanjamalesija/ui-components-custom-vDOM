@@ -62,17 +62,24 @@ function inputHandler(e: InputEvent) {
 
   post = (e.target as HTMLInputElement).value;
 }
+
 function createVDOM() {
   const inputInfo = ['input', post, inputHandler];
-  const divInfo = ['div', `Post displayed: ${post}`];
+  const divInfo = ['div', `First post: ${post}`];
+  const divInfo2 = ['h3', 'Great job!'];
+  const paragraph = [
+    'p',
+    'This is a composed paragraph made for exercise purpose in VIRTUAL DOM and user interface components.',
+  ];
 
-  return [inputInfo, divInfo];
+  return [inputInfo, divInfo, divInfo2, paragraph];
 }
 
 function updateDOM() {
   const vDOM = createVDOM();
   const actualDOM = vDOM.map(convert);
-  document.body.replaceChildren(...actualDOM);
+
+  document.body.replaceChildren(...(actualDOM as Node[]));
 
   const jsInputDOM = actualDOM.find(
     (element) => element instanceof HTMLInputElement
@@ -83,25 +90,22 @@ function updateDOM() {
 }
 
 function convert(vDOM: any[]) {
+  let convertedInput: HTMLInputElement;
+  let convertedElem: Element;
+
   if (vDOM[0] === 'input') {
-    const elem = document.createElement(vDOM[0]);
-    elem.value = vDOM[1];
-    elem.addEventListener('input', inputHandler as EventListener);
-    return elem;
+    convertedInput = document.createElement(vDOM[0]);
+    convertedInput.value = vDOM[1];
+    convertedInput.addEventListener('input', vDOM[2] as EventListener);
+    convertedInput.focus();
+    return convertedInput;
   }
-  if (vDOM[0] === 'div') {
-    const elem = document.createElement(vDOM[0]);
-    elem.textContent = vDOM[1];
-    return elem;
-  } else return;
+
+  if (vDOM[0] === 'div' || vDOM[0] === 'h3' || vDOM[0] === 'p') {
+    convertedElem = document.createElement(vDOM[0]);
+    convertedElem.textContent = vDOM[1];
+    return convertedElem;
+  } else return new Error('Item not convertible or incorrectly passed item');
 }
 
-// setInterval(updateDOM, 15);
-
-// jsInput = document.createElement('input');
-// jsDiv = post == 'Will' ? '' : document.createElement('div');
-// jsInput.value = post;
-// if (jsDiv) jsDiv.textContent = post;
-// document.body.replaceChildren(jsInput, jsDiv as HTMLDivElement);
-// jsInput.addEventListener('input', inputHandler as EventListener);
-// jsInput.focus();
+setInterval(updateDOM, 150);
