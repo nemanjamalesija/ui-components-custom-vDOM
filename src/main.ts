@@ -43,9 +43,9 @@ function createVDOM() {
 }
 
 function updateDOM() {
-  if (!elems) {
+  if (elems.length === 0) {
     elems = vDOM.map(convert);
-    document.body.replaceChildren(...(elems as Node[]));
+    document.body.append(...(elems as Node[]));
   } else {
     prevDom = [...vDOM];
     vDOM = createVDOM();
